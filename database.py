@@ -1,4 +1,6 @@
-
+import random
+import sys
+import os
 
 class Database:
     def __init__(self, data_filename="data.csv"):
@@ -8,10 +10,9 @@ class Database:
             for line in f:
                 self.data.append(line.strip())
 
-    def __getitem__(self, user_name):
-        for line in self.data:
-            if line[0] == user_name:
-                return line
+
+    def __getitem__(self, index):
+        return self.data[index]
 
 
     def _save(self):
@@ -38,15 +39,59 @@ class Database:
         self._save()
 
 
+def user_login():
+    db = Database()
+    login = input("User Name: ")
+    password = input("Password: ")
+    for line in db.data:
+        new_line = line.split(',')
+        if login == new_line[0]:
+            if password == new_line[1]:
+                print("Your info is: ")
+                add_item_interface()
+            elif password not in row:
+                continue
+        else:
+            print("Your login information was invalid.  Try again.")
+            main()
+
+
+def add_item_interface():
+    db = Database()
+    new_choice = input("Would you like to add a user or log out? ")
+    if new_choice[0] == 'a':
+        user1 = input("What is the new username? ")
+        for row in db.data:
+            row = row.split(',')
+            if user1 in row[0:len(user1)]:
+                print("That username is already taken! Choose another.")
+                add_item_interface()
+            else:
+                print("Great! That username hasn't been taken!")
+                pass1 = input("What would you like {}'s password to be? ".format(user1))
+                age1 = input("What is {}'s age? ".format(user1))
+                gender1 = input("What is {}'s gender? ".format(user1))
+                job1 = input("What is {}'s occupation? ".format(user1))
+                new_user = (user1,pass1,age1,gender1,job1)
+                db.add_user(new_user)
+                add_item_interface()
+    else:
+        main()
+
 def main():
     db = Database()
-    user1 = ["Hello","World"]
-    user2 = ["JohnBower","Password"]
-    db.add_user(user1)
-    db.add_user(user2)
     print(db.data)
-    db.remove_user("JohnBower")
-    print(db.data)
+    print(type(db.data))
+    login = ''
+    password = ''
+    user_login()
+
+
+def clear():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 if __name__ == '__main__':
     main()
